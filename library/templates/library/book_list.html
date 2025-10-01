@@ -6,7 +6,7 @@
   <h2 class="mb-4 text-primary fw-bold">📚 Available Books</h2>
 
   <!-- Search & Filter Form -->
-  <form method="get" action="" class="row g-2 mb-4">
+  <form method="get" action="" class="row g-6 mb-4">
     <div class="col-md-4">
       <input 
         type="text" 
@@ -16,7 +16,7 @@
         value="{{ q }}"
       >
     </div>
-    <div class="col-md-3">
+    <div class="col-md-4">
       <select name="category" class="form-select">
         <option value="">All Categories</option>
         {% for c in categories %}
@@ -26,8 +26,8 @@
         {% endfor %}
       </select>
     </div>
-    <div class="col-md-2">
-      <button type="submit" class="btn btn-primary w-100">Search / Filter</button>
+    <div class="col-md-4">
+      <button type="submit" class="btn btn-primary w-60">Search / Filter</button>
     </div>
   </form>
 

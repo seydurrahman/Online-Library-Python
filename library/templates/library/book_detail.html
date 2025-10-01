@@ -1,0 +1,48 @@
+{% extends 'library/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+  <h2>{{ book.title }}</h2>
+<p><strong>Author:</strong> {{ book.author }}</p>
+<p><strong>Category:</strong> 
+  {% if book.category %}
+    {{ book.category.name }}
+  {% else %}
+    Uncategorized
+  {% endif %}
+</p>
+
+{% if book.cover %}
+  <img src="{{ book.cover.url }}" alt="{{ book.title }}" style="max-width:200px;">
+{% endif %}
+
+<p>{{ book.description|linebreaks }}</p>
+
+<p><strong>Average Rating:</strong> {{ book.average_rating }} ({{ book.reviews_count }} reviews)</p>
+
+<hr>
+<h3>Reviews</h3>
+<ul>
+  {% for r in reviews %}
+    <li>
+      <strong>{{ r.user.username }}</strong> — {{ r.rating }}/5<br>
+      {{ r.comment|linebreaks }} <small>— {{ r.created_at }}</small>
+    </li>
+  {% empty %}
+    <li>No reviews yet. Be the first to review!</li>
+  {% endfor %}
+</ul>
+
+<hr>
+{% if user.is_authenticated %}
+  <h3>Write a review</h3>
+  <form method="post">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-success">Post Review</button>
+  </form>
+{% else %}
+  <p><a href="{% url 'library:login' %}?next={{ request.path }}">Log in</a> to write a review.</p>
+{% endif %}
+</div>
+{% endblock %}

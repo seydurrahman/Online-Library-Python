@@ -1,0 +1,14 @@
+{% extends 'library/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="container">
+    <h2>Login</h2>
+  <form method="post" class="w-50 mx-auto mt-4">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <input type="hidden" name="next" value="{{ next }}">
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+  </div>
+{% endblock %}

@@ -1,36 +1,65 @@
 {% extends 'library/base.html' %}
 {% load crispy_forms_tags %}
+
 {% block content %}
-<div class="container">
-  <h2>Books</h2>
+<div class="container my-4">
+  <h2 class="mb-4 text-primary fw-bold">📚 Available Books</h2>
 
-<form method="get" action="">
-  {{ form|crispy }}
-  <input type="text" name="q" placeholder="Search title or author" value="{{ q }}">
- <select name="category">
-  <option value="">All categories</option>
-  {% for c in categories %}
-    <option value="{{ c.id }}" {% if selected_cat|stringformat:"s" == c.id|stringformat:"s" %}selected{% endif %}>
-      {{ c.name }}
-    </option>
-  {% endfor %}
-</select>
-  <button type="submit">Search / Filter</button>
-</form>
+  <!-- Search & Filter Form -->
+  <form method="get" action="" class="row g-2 mb-4">
+    <div class="col-md-4">
+      <input 
+        type="text" 
+        name="q" 
+        class="form-control" 
+        placeholder="Search title or author..." 
+        value="{{ q }}"
+      >
+    </div>
+    <div class="col-md-3">
+      <select name="category" class="form-select">
+        <option value="">All Categories</option>
+        {% for c in categories %}
+          <option value="{{ c.id }}" {% if selected_cat|stringformat:"s" == c.id|stringformat:"s" %}selected{% endif %}>
+            {{ c.name }}
+          </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-primary w-100">Search / Filter</button>
+    </div>
+  </form>
 
-<ul>
-  {% for book in books %}
-    <li>
-      <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> by {{ book.author }}
-      {% if book.average_rating %}
-        — Rating: {{ book.average_rating }} ({{ book.reviews_count }} reviews)
-      {% endif %}
-    </li>
-  {% empty %}
-    <li>No books found.</li>
-  {% endfor %}
-</ul>
+  <!-- Book List -->
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    {% for book in books %}
+      <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+          <div class="card-body">
+            <h5 class="card-title">
+              <a href="{{ book.get_absolute_url }}" class="text-decoration-none text-dark fw-bold">
+                {{ book.title }}
+              </a>
+            </h5>
+            <p class="card-text text-muted">by {{ book.author }}</p>
+
+            {% if book.average_rating %}
+              <p class="mb-0">
+                ⭐ {{ book.average_rating }} 
+                <small class="text-muted">({{ book.reviews_count }} reviews)</small>
+              </p>
+            {% else %}
+              <p class="text-muted"><em>No reviews yet</em></p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="alert alert-warning text-center">
+        No books found.
+      </div>
+    {% endfor %}
+  </div>
 </div>
 {% endblock %}
-
-

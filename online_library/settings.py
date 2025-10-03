@@ -22,6 +22,9 @@ INSTALLED_APPS = [
 ]
 
 ALLOWED_HOSTS = ["online-library-python.onrender.com"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://online-library-python.onrender.com",
+]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"

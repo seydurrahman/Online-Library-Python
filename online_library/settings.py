@@ -21,7 +21,7 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",  # our app
 ]
 
-ALLOWED_HOSTS='online-library-python.onrender.com'
+ALLOWED_HOSTS = ["online-library-python.onrender.com"]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"

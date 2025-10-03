@@ -5,6 +5,8 @@ from django.db.models import Q
 from .models import Book, Category
 from .forms import UserRegisterForm, ReviewForm, BookForm
 from django.contrib import messages
+from django.core.paginator import Paginator
+
 
 def index(request):
     # Browse list with optional search and category filter
@@ -17,9 +19,12 @@ def index(request):
         books = books.filter(Q(title__icontains=q) | Q(author__icontains=q))
     if cat:
         books = books.filter(category__id=cat)
+    paginator = Paginator(books,6)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     categories = Category.objects.all()
-    context = {'books': books, 'categories': categories, 'q': q, 'selected_cat': cat}
+    context = {'books': books, 'categories': categories, 'q': q, 'selected_cat': cat, "page_obj":page_obj}
     return render(request, 'library/book_list.html', context)
 
 def book_detail(request, pk):

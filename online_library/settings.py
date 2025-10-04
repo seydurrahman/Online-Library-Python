@@ -21,9 +21,16 @@ INSTALLED_APPS = [
     "crispy_bootstrap5",  # our app
 ]
 
-ALLOWED_HOSTS = ["online-library-python.onrender.com"]
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "online-library-python.onrender.com",
+]
+
 CSRF_TRUSTED_ORIGINS = [
     "https://online-library-python.onrender.com",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"

@@ -29,9 +29,11 @@ ALLOWED_HOSTS = [
 
 CSRF_TRUSTED_ORIGINS = [
     "https://online-library-python.onrender.com",
+    "https://*.onrender.com",
     "http://127.0.0.1:8000",
     "http://localhost:8000",
 ]
+
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"

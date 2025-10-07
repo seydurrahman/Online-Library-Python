@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 
 
-def index(request):
+def book_list(request):
     # Browse list with optional search and category filter
     q = request.GET.get('q', '').strip()
     cat = request.GET.get('category', '').strip()
@@ -62,7 +62,7 @@ def register_view(request):
             user = form.save()
             login(request, user)
             messages.success(request, "Registration successful. You are logged in.")
-            return redirect('library:index')
+            return redirect('library:book_list')
     else:
         form = UserRegisterForm()
     return render(request, 'library/register.html', {'form': form})

@@ -7,17 +7,17 @@ from django.shortcuts import redirect
 app_name = 'library'
 def logout_view(request):
     logout(request)
-    return redirect('library:index')
+    return redirect('library:book_list')
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', views.book_list, name='book_list'),
     path('book/<int:pk>/', views.book_detail, name='book_detail'),
     path('add-book/', views.add_book, name='add_book'),
     path('register/', views.register_view, name='register'),
     path('login/', auth_views.LoginView.as_view(
     template_name='library/login.html',
     redirect_authenticated_user=True,
-    next_page='library:index'
+    next_page='library:book_list'
 ), name='login'),
     path('logout/', logout_view, name='logout'),
 ]

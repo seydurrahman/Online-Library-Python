@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Q
 from .models import Book, Category
-from .forms import UserRegisterForm, ReviewForm, BookForm
+from .forms import CategoryForm, UserRegisterForm, ReviewForm, BookForm
 from django.contrib import messages
 from django.core.paginator import Paginator
 
@@ -82,3 +82,19 @@ def add_book(request):
     else:
         form = BookForm()
     return render(request, 'library/add_book.html', {'form': form})
+
+def category_list(request):
+    if request.method == 'POST':
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            category = form.save()
+            messages.success(request, "Category added.")
+            return redirect('library:category_list')
+    else:
+        form = CategoryForm()
+    
+    categories = Category.objects.all()
+    return render(request, 'library/category_list.html', {
+        'form': form, 
+        'categories': categories
+    })

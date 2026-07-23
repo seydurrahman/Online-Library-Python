@@ -1,0 +1,116 @@
+{% extends "library/base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<!-- Add Shelf & Rack -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <h5 class="mb-0">Add Shelf & Rack</h5>
+    </div>
+
+    <div class="card-body">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+
+            <button type="submit" class="btn btn-success">
+                <i class="bi bi-plus-circle"></i> Add
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Shelf List -->
+<div class="card">
+    <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0">Shelf & Rack List</h5>
+    </div>
+
+    <div class="card-body">
+
+        {% if shelves %}
+        <ul class="list-group">
+
+            {% for shelf in shelves %}
+            <li class="list-group-item">
+
+                <h5 class="text-primary">
+                    📚 {{ shelf.name }}
+                </h5>
+
+                {% if shelf.racks.exists %}
+
+                <table class="table table-bordered table-sm mt-2">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Rack</th>
+                            <th>Side</th>
+                            <th>Serial Numbers</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        {% for rack in shelf.racks.all %}
+                        <tr>
+
+                            <td>{{ rack.rack_number }}</td>
+
+                            <td>
+                                {{ rack.side_name|default:"-" }}
+                            </td>
+
+                            <td>
+
+                                {% if rack.serials.exists %}
+
+                                    {% for serial in rack.serials.all %}
+                                        <span class="badge bg-info text-dark">
+                                            {{ serial.serial_number }}
+                                        </span>
+                                    {% endfor %}
+
+                                {% else %}
+
+                                    <span class="text-muted">
+                                        No Serial
+                                    </span>
+
+                                {% endif %}
+
+                            </td>
+
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+                {% else %}
+
+                    <p class="text-muted">
+                        No racks available.
+                    </p>
+
+                {% endif %}
+
+            </li>
+
+            {% endfor %}
+
+        </ul>
+
+        {% else %}
+
+            <div class="alert alert-warning mb-0">
+                No shelves have been created.
+            </div>
+
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}

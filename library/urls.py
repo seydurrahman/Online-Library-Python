@@ -17,6 +17,7 @@ urlpatterns = [
     path("book/<int:pk>/", views.book_detail, name="book_detail"),
     path("add-book/", views.add_book, name="add_book"),
     path("categories/", views.category_list, name="category_list"),
+    path("self-rack/add/", views.self_rack_add, name="self_rack_add"),
     path("register/", views.register_view, name="register"),
     path(
         "login/",

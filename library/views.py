@@ -137,6 +137,55 @@ def category_list(request):
     )
 
 
+def category_edit(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+    if request.method == "POST":
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Category updated.")
+            return redirect("library:category_list")
+    else:
+        form = CategoryForm(instance=category)
+    return render(
+        request, "library/category_edit.html", {"form": form, "category": category}
+    )
+
+
+@user_passes_test(staff_check)
+def rack_edit(request, pk):
+    rack = get_object_or_404(Rack, pk=pk)
+    from .forms import RackForm
+
+    if request.method == "POST":
+        form = RackForm(request.POST, instance=rack)
+        if form.is_valid():
+            rack = form.save()
+            # update serials: replace with provided list
+            serials_text = form.cleaned_data.get("serials", "") or ""
+            parts = [
+                p.strip()
+                for p in serials_text.replace("\n", ",").split(",")
+                if p.strip()
+            ]
+            # create new serials and collect keep ids
+            keep = []
+            for part in parts:
+                s, created = Serial.objects.get_or_create(rack=rack, serial_number=part)
+                keep.append(s.id)
+            # delete serials not in keep
+            rack.serials.exclude(id__in=keep).delete()
+            messages.success(request, "Rack updated.")
+            return redirect("library:self_rack_add")
+    else:
+        # prepare initial serials as CSV
+        serials_qs = rack.serials.all().values_list("serial_number", flat=True)
+        initial_serials = ",".join(serials_qs)
+        form = RackForm(instance=rack, initial={"serials": initial_serials})
+
+    return render(request, "library/rack_edit.html", {"form": form, "rack": rack})
+
+
 @user_passes_test(staff_check)
 def self_rack_add(request):
     if request.method == "POST":
@@ -158,9 +207,15 @@ def self_rack_add(request):
 
             created_serial = False
             if snum:
-                serial_obj, created_serial = Serial.objects.get_or_create(
-                    rack=rack, serial_number=snum
-                )
+                # allow multiple serials entered as comma-separated values (e.g. "1,2")
+                parts = [
+                    p.strip() for p in snum.replace("\n", ",").split(",") if p.strip()
+                ]
+                for part in parts:
+                    serial_obj, created = Serial.objects.get_or_create(
+                        rack=rack, serial_number=part
+                    )
+                    created_serial = created_serial or created
 
             messages.success(request, "Self & Rack added.")
             return redirect("library:self_rack_add")

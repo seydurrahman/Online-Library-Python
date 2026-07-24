@@ -19,7 +19,9 @@ urlpatterns = [
     path("ajax/load-racks/", views.load_racks, name="ajax_load_racks"),
     path("ajax/load-serials/", views.load_serials, name="ajax_load_serials"),
     path("categories/", views.category_list, name="category_list"),
+    path("categories/<int:pk>/edit/", views.category_edit, name="category_edit"),
     path("self-rack/add/", views.self_rack_add, name="self_rack_add"),
+    path("rack/<int:pk>/edit/", views.rack_edit, name="rack_edit"),
     path("register/", views.register_view, name="register"),
     path(
         "login/",

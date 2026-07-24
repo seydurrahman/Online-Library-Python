@@ -62,3 +62,17 @@ class SelfRackForm(forms.Form):
         max_length=50, label="Serial number", required=False
     )
     side_name = forms.CharField(max_length=50, label="Side", required=False)
+
+
+class RackForm(forms.ModelForm):
+    # allow editing serials as a comma/newline-separated string
+    serials = forms.CharField(
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 2}),
+        help_text="Enter serial numbers separated by commas or new lines",
+        label="Serial numbers",
+    )
+
+    class Meta:
+        model = Rack
+        fields = ["shelf", "rack_number", "side_name"]

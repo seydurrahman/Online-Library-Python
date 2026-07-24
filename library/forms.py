@@ -27,7 +27,26 @@ class ReviewForm(forms.ModelForm):
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ["title", "author", "category", "cover", "description"]
+        fields = [
+            "title",
+            "author",
+            "category",
+            "shelf",
+            "rack",
+            "serial",
+            "cover",
+            "description",
+        ]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-control"}),
+            "author": forms.TextInput(attrs={"class": "form-control"}),
+            "category": forms.Select(attrs={"class": "form-select"}),
+            "shelf": forms.Select(attrs={"class": "form-select"}),
+            "rack": forms.Select(attrs={"class": "form-select"}),
+            "serial": forms.Select(attrs={"class": "form-select"}),
+            "cover": forms.ClearableFileInput(attrs={"class": "form-control"}),
+            "description": forms.TextInput(attrs={"class": "form-control"}),
+        }
 
 
 class CategoryForm(forms.ModelForm):

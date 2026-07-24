@@ -1,12 +1,100 @@
-{% extends 'library/base.html' %}
-{% load crispy_forms_tags %}
+{% extends 'library/base.html' %} 
+{% load crispy_forms_tags %} 
 {% block content %}
 <div class="container">
-  <h2>Add Book</h2>
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %}
-  {{ form|crispy }}
-  <button type="submit" class="btn btn-primary">Add Book</button>
-</form>
+  <h2 class="">Add Book</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %} {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        {{ form.title.label_tag }} {{ form.title }} {{ form.title.errors }}
+      </div>
+      <div class="col-md-4 mb-4">
+        {{ form.author.label_tag }} {{ form.author }} {{ form.author.errors }}
+      </div>
+      <div class="col-md-4 mb-4">
+        {{ form.category.label_tag }} {{ form.category }} {{form.category.errors
+        }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        {{ form.shelf.label_tag }} {{ form.shelf }} {{ form.shelf.errors }}
+      </div>
+      <div class="col-md-4 mb-4">
+        {{ form.rack.label_tag }} {{ form.rack }} {{ form.rack.errors }}
+      </div>
+      <div class="col-md-4 mb-4">
+        {{ form.serial.label_tag }} {{ form.serial }} {{ form.serial.errors }}
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 mb-4">
+        {{ form.cover.label_tag }} {{ form.cover }} {{ form.cover.errors }}
+      </div>
+      <div class="col-md-4 mb-4">
+        {{ form.description.label_tag }} {{ form.description }}
+        {{form.description.errors }}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary mt-6">Add Book</button>
+  </form>
 </div>
+<script>
+  // Dependent selects: shelf -> rack -> serial
+  document.addEventListener("DOMContentLoaded", function () {
+    const shelfSelect = document.getElementById("id_shelf");
+    const rackSelect = document.getElementById("id_rack");
+    const serialSelect = document.getElementById("id_serial");
+
+    function clearOptions(selectEl, keepFirst = true) {
+      while (selectEl.options.length > (keepFirst ? 1 : 0)) {
+        selectEl.remove(selectEl.options.length - 1);
+      }
+    }
+
+    if (shelfSelect) {
+      shelfSelect.addEventListener("change", function () {
+        const shelfId = this.value;
+        clearOptions(rackSelect);
+        clearOptions(serialSelect);
+        if (!shelfId) return;
+        fetch(`{% url 'library:ajax_load_racks' %}?shelf_id=${shelfId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            data.forEach((item) => {
+              const opt = document.createElement("option");
+              opt.value = item.id;
+              opt.text = item.rack_number;
+              rackSelect.appendChild(opt);
+            });
+          });
+      });
+    }
+
+    if (rackSelect) {
+      rackSelect.addEventListener("change", function () {
+        const rackId = this.value;
+        clearOptions(serialSelect);
+        if (!rackId) return;
+        fetch(`{% url 'library:ajax_load_serials' %}?rack_id=${rackId}`)
+          .then((res) => res.json())
+          .then((data) => {
+            data.forEach((item) => {
+              const opt = document.createElement("option");
+              opt.value = item.id;
+              opt.text = item.serial_number;
+              serialSelect.appendChild(opt);
+            });
+          });
+      });
+    }
+  });
+</script>
 {% endblock %}

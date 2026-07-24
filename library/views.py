@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Q
+from django.http import JsonResponse
 from .models import Book, Category, Shelf, Rack, Serial
 from .forms import CategoryForm, UserRegisterForm, ReviewForm, BookForm, SelfRackForm
 from django.contrib import messages
@@ -91,7 +92,33 @@ def add_book(request):
             return redirect(book.get_absolute_url())
     else:
         form = BookForm()
+    # provide querysets for the form's ModelChoiceFields
+    form.fields["shelf"].queryset = Shelf.objects.all()
+    if "rack" in form.fields:
+        form.fields["rack"].queryset = Rack.objects.all()
+    if "serial" in form.fields:
+        form.fields["serial"].queryset = Serial.objects.all()
     return render(request, "library/add_book.html", {"form": form})
+
+
+def load_racks(request):
+    """AJAX view to return racks for a given shelf id."""
+    shelf_id = request.GET.get("shelf_id")
+    racks = []
+    if shelf_id:
+        racks = list(Rack.objects.filter(shelf_id=shelf_id).values("id", "rack_number"))
+    return JsonResponse(racks, safe=False)
+
+
+def load_serials(request):
+    """AJAX view to return serials for a given rack id."""
+    rack_id = request.GET.get("rack_id")
+    serials = []
+    if rack_id:
+        serials = list(
+            Serial.objects.filter(rack_id=rack_id).values("id", "serial_number")
+        )
+    return JsonResponse(serials, safe=False)
 
 
 def category_list(request):

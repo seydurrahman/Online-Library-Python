@@ -24,6 +24,15 @@ class Book(models.Model):
     category = models.ForeignKey(
         Category, related_name="books", on_delete=models.SET_NULL, null=True, blank=True
     )
+    shelf = models.ForeignKey(
+        "Shelf", related_name="books", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    rack = models.ForeignKey(
+        "Rack", related_name="books", on_delete=models.SET_NULL, null=True, blank=True
+    )
+    serial = models.ForeignKey(
+        "Serial", related_name="books", on_delete=models.SET_NULL, null=True, blank=True
+    )
     cover = models.ImageField(upload_to="covers/", blank=True, null=True)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

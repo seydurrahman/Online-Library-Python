@@ -7,53 +7,88 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('library', '0002_selfrack'),
+        ("library", "0002_selfrack"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Rack',
+            name="Rack",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('rack_number', models.CharField(max_length=50)),
-                ('side_name', models.CharField(blank=True, max_length=50)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("rack_number", models.CharField(max_length=50)),
+                ("side_name", models.CharField(blank=True, max_length=50)),
             ],
             options={
-                'ordering': ['rack_number'],
+                "ordering": ["rack_number"],
             },
         ),
         migrations.CreateModel(
-            name='Serial',
+            name="Serial",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('serial_number', models.CharField(max_length=50)),
-                ('rack', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='serials', to='library.rack')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("serial_number", models.CharField(max_length=50)),
+                (
+                    "rack",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="serials",
+                        to="library.rack",
+                    ),
+                ),
             ],
             options={
-                'unique_together': {('rack', 'serial_number')},
+                "unique_together": {("rack", "serial_number")},
             },
         ),
         migrations.CreateModel(
-            name='Shelf',
+            name="Shelf",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=100, unique=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=100, unique=True)),
             ],
             options={
-                'verbose_name_plural': 'Shelves',
-                'ordering': ['name'],
+                "verbose_name_plural": "Shelves",
+                "ordering": ["name"],
             },
         ),
         migrations.DeleteModel(
-            name='SelfRack',
+            name="SelfRack",
         ),
         migrations.AddField(
-            model_name='rack',
-            name='shelf',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='racks', to='library.shelf'),
+            model_name="rack",
+            name="shelf",
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="racks",
+                to="library.shelf",
+            ),
         ),
         migrations.AlterUniqueTogether(
-            name='rack',
-            unique_together={('shelf', 'rack_number')},
+            name="rack",
+            unique_together={("shelf", "rack_number")},
         ),
     ]

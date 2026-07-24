@@ -7,23 +7,41 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('library', '0003_rack_serial_shelf_delete_selfrack_rack_shelf_and_more'),
+        ("library", "0003_rack_serial_shelf_delete_selfrack_rack_shelf_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='book',
-            name='rack',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='books', to='library.rack'),
+            model_name="book",
+            name="rack",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="books",
+                to="library.rack",
+            ),
         ),
         migrations.AddField(
-            model_name='book',
-            name='serial',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='books', to='library.serial'),
+            model_name="book",
+            name="serial",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="books",
+                to="library.serial",
+            ),
         ),
         migrations.AddField(
-            model_name='book',
-            name='shelf',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='books', to='library.shelf'),
+            model_name="book",
+            name="shelf",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                related_name="books",
+                to="library.shelf",
+            ),
         ),
     ]

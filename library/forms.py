@@ -56,7 +56,7 @@ class CategoryForm(forms.ModelForm):
 
 
 class SelfRackForm(forms.Form):
-    self_name = forms.CharField(max_length=100, label="Self name")
+    self_name = forms.CharField(max_length=100, label="Shelf name")
     rack_number = forms.CharField(max_length=50, label="Rack number")
     serial_number = forms.CharField(
         max_length=50, label="Serial number", required=False
